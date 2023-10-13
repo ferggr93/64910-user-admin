@@ -118,19 +118,61 @@ const usersArray = [
 ];
 
 let tableBody = document.getElementById('table-body');
+let searchInput = document.querySelector('#search');
 
-usersArray.forEach(user => {
-    tableBody.innerHTML+= `<tr class="table-body">
-    <td class="user-image">
-        <img src="${user.image}" alt="${user.fullname}"picture>
-    </td>
-    <td class="user-name">${user.fullname}</td>
-    <td class="user-email">${user.email}</td>
-    <td class="user-location">${user.location}</td>
-    <td class="user-age">${user.age}</td>
-    <td class="user-date">${formatDate(user.bornDate)}</td>
-</tr>`
+//FILTRO DE USUARIO
+//ESCUCHAR EL EVENTO KEYUP SOBRE EL INPUT SEARCH
+searchInput.addEventListener('keyup', (e)=>{
+   
+    
+    //OBTENER VALOR DEL INPUT 
+    const inputValue = e.target.value.toLowerCase();
+    
+    //BUSCAR EN TODOS LOS USUARIOS AQUELLOS QUE CONTENGAN EL INPUT
+   
+    const usuarioFiltrados = usersArray.filter((usuario) =>{
+    const nombre = usuario.fullname.toLowerCase();
+
+            if(nombre.includes(inputValue)){
+                return true;
+            }
+            return false;
+        
+
+    })
+
+    
+   
+    //PINTAR SOLO ESOS USUARIOS
+    GenerarInterfaz(usuarioFiltrados);
+
 })
+
+function GenerarInterfaz(array){
+
+    //VACIADO PREVIO PARA EVITAR SOBREESCRIBIR LAS COSAS
+    tableBody.innerHTML=" ";
+    array.forEach((user, indice) => {//PUEDE RECIBIR 2 PARAMETROS, EL 1ER PARAMETRO IDENTIFICA AL OBJETO, EL 2DO A SU INDICE
+        tableBody.innerHTML+= `<tr class="table-body">
+        <td class="user-image">
+            <img src="${user.image}" alt="${user.fullname}"picture>
+        </td>
+        <td class="user-name">${user.fullname}</td>
+        <td class="user-email">${user.email}</td>
+        <td class="user-location">${user.location}</td>
+        <td class="user-age">${user.age}</td>
+        <td class="user-date">${formatDate(user.bornDate)}</td>
+        <td class="user-acciones">
+         <button class="action-btn btn-danger" title="Borrar"
+          onclick="BorrarUsuario(${indice})">
+            <i class="fa-solid fa-trash"></i>
+         </button>
+        </td>
+        </tr>`
+    })
+}
+
+GenerarInterfaz(usersArray);
 
 function formatDate(fecha){
     //DEVOLVER FECHA EN FORMATO CORRECTO
@@ -143,4 +185,9 @@ function formatDate(fecha){
     const fechaFormateada = collator.format(fecha);
 
     return fechaFormateada;
+}
+
+function BorrarUsuario(indice){
+        usersArray.splice(indice, 1);//BORRAMOS SOLAMENTE EL INDICE, AL ESPECIFICAR EL VALOR A BORRAR(INDICE) Y 1 SE ASEGURA DE SOLO BORRAR ESE ELEMENTO
+        GenerarInterfaz(usersArray);//VOLVEMOS A GENERAR INTERFAZ CON LOS CAMBIOS
 }
