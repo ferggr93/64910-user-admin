@@ -1,3 +1,84 @@
+/*
+  Arrays-propiedad
+
+  .Length - devuelve el numero de elementos que tiene el array
+*/
+
+/*
+   Arrays Metodos
+
+     Array.isArray(variable a evaluar) -- evalua si el valor pasado es o no un array
+    
+*/
+
+//console.log(Array.isArray(nros))
+
+/*
+    Eliminar elementos
+
+     .shift(Elimina el primer elemento del array y devuelve ese elemento)
+     .pop(Elimina el ultimo elemento)
+     los elementos eliminados podemos almacenarlos en una variable
+*/ 
+
+  //let deleteElement = nros.pop();
+  //nros.shift();
+
+  //console.log(nros)
+
+/* 
+   Añadir Elementos
+     
+    .unshift(elemento, elemento..) añade uno o mas elemento al comienzo del array
+    .push(elemento, elemento..)añade uno o mas elemento al final del array
+*/
+
+/*
+   Busqueda con indexOf()
+
+     indexOf() -> devuelve el primer indice del elemento que coincida con el valor especificado, si no devuelve -1
+     lastIndexOf() -> devuelve el ultimo indice del elemento que coincida con el valor especificado, si no -1
+*/   
+
+  //let index = nros.lastIndexOf(3);
+  //console.log(index)
+ 
+ /* 
+    reverse() -> invierte el orden del array
+ */
+
+    //nros.reverse();
+    //console.log(nros);
+
+/* 
+    join('separador') -> devuelve un string con el separador que indiquemos, por defecto son comas
+*/
+  //console.log(nros.join('fernando'))    
+
+  /*
+     
+     .splice(a,b,items) - cambia el contenido de un array eliminando
+     elementos existentes y/o agregando nuevos elementos.
+
+       a - indice de inicio
+       b - numero de elementos(opcional)
+       items - elemento a añadir en caso de que se añadan(opcional)
+
+  */
+    
+    // nros.splice(3); Elimina desde la la posicion 3 hasta el final
+    // nros.splice(2,2); elimina desde la posicion 2 el nro de valores que e indiquemos
+    // nros.splice(2,2, 10,23,44) elimina el numero de valores que indiquemos en b y luego añade el numero de items que indiquemos
+    // nros.splice(2,0,10,23,44) Si b vale cero, no elimina nada, solo agrega los elementos
+    // //console.log(nros)
+    //
+
+    /*
+
+     .slice(a,b) --> extrae elementos desde donde indiquemos hasta b y si no agregamos b extrae desde donde indiquemos hasta el final
+     si no pasamos ni a ni b solo crea una copia del original 
+  */
+
 const usersArray = [
     {
         fullname: 'John Doe',
@@ -28,7 +109,7 @@ const usersArray = [
         id: '3',
         active: true,
         password: 'password789',
-        bornDate: new Date('1988-08-08').getTime(),
+        bornDate: new Date('1988-08-08').getTime(),//la fecha tiene que ser transformada a timestamp
         location: 'Miami, FL',
         image: "https://m.media-amazon.com/images/I/81wNRtDaTXL.png"
     },
@@ -117,8 +198,15 @@ const usersArray = [
     }
 ];
 
+//Obtenemos valor la tabla al que accederemos para "Pintar la interfaz"
 let tableBody = document.getElementById('table-body');
+//Obtenemos valor del search 
 let searchInput = document.querySelector('#search');
+//Obtenemos form
+let userForm = document.querySelector("form#user-form");
+
+const submitBtn = userForm.querySelector('button[type=submit].btn-form');
+
 
 //FILTRO DE USUARIO
 //ESCUCHAR EL EVENTO KEYUP SOBRE EL INPUT SEARCH
@@ -164,8 +252,13 @@ function GenerarInterfaz(array){
         <td class="user-date">${formatDate(user.bornDate)}</td>
         <td class="user-acciones">
          <button class="action-btn btn-danger" title="Borrar"
-          onclick="BorrarUsuario(${indice})">
+          onclick="BorrarUsuario( '${user.id}' )">
             <i class="fa-solid fa-trash"></i>
+         </button>
+
+         <button class="action-btn" title="Editar Usuario"
+          onclick="editarUsuario( '${user.id}' ) ">
+          <i class="fa-solid fa-pen-to-square"></i>
          </button>
         </td>
         </tr>`
@@ -187,7 +280,213 @@ function formatDate(fecha){
     return fechaFormateada;
 }
 
-function BorrarUsuario(indice){
+function BorrarUsuario(id){
+    const confirmDelete = confirm('deseas borrar');
+
+
+    //chequeamos en el array donde esta el elemento que estamos queriendo borrar
+    //NUNCA USAR ID
+    if(confirmDelete){
+        const indice = usersArray.findIndex(user =>{
+            if(user.id === id){
+                return true;
+            }
+            return false;
+    })
         usersArray.splice(indice, 1);//BORRAMOS SOLAMENTE EL INDICE, AL ESPECIFICAR EL VALOR A BORRAR(INDICE) Y 1 SE ASEGURA DE SOLO BORRAR ESE ELEMENTO
         GenerarInterfaz(usersArray);//VOLVEMOS A GENERAR INTERFAZ CON LOS CAMBIOS
+    }
+    
 }
+
+
+
+
+
+//ESCUCHAMOS EL EVENTO SUBMIT EN EL FORM
+
+userForm.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    
+//TARGET ES DONDE SE DISPARO EL EVENTO IMPORTANTE ACCEDER A TARGET
+//ELEMENTS NOS TRAE TODOS LOS INPUTS 
+//PODEMOS ACCEDER POR LOS NOMBRES(ATRIBUTO NAME EN INPUT)
+//VALUE ES LO QUE NOS TRAE EL VALOR EN SI MISMO
+    //console.dir(e.target.elements.location.value);
+    
+    const element = e.target.elements;
+
+    //LA LOGICA DEBE SER CORTADA SI PASSWORDS SON DISTINTAS O EMAIL YA EXISTE
+    
+   
+
+    
+    if(element.password.value != element.Rpassword.value){
+        Swal.fire('las contraseñas no pueden ser distintas', 'error')
+        //EL RETURN NOS PERMITE CORTAR LA EJECUCION
+        return
+    }
+    const emailExist = usersArray.find((user) =>{
+        if(user.email === element.email.value){
+            return true;
+        }
+        
+    })
+    
+    
+    if(emailExist && element.id.value != emailExist.id){
+        Swal.fire({
+            title:'correo existe',
+            icon:'succes',
+            timer:1000
+        })
+        return;
+    }
+    //Manera de asignarle id a los nuevos elementos
+    let id;
+    if(element.id.value){
+        id=element.id.value
+    }
+    else{
+        id=crypto.randomUUID();
+    }
+    
+    usuario = {
+        fullname:element.fullname.value,//ACCEDEMOS AL NAME DEL INPUT
+        age:element.age.valueAsNumber, //Convertir valor del value recibido a numero
+        email:element.email.value,
+        password:element.password.value,
+        active:element.active.checked,//los active no se toma el value si no el checked que devuelve true o false
+        bornDate:new Date(element.bornDate.value).getTime(),//pasar el valor de la fecha a un timestamp 
+        location:element.location.value,
+        id:id,//FORMA DE GENERAR ID ALEATORIO
+        image:element.image.value
+
+    }
+
+    //2 acciones a realizar, 
+        //a Agregar usuario nuevo
+        //b al estar editando deberia reemplazar la info con la info actualizada
+    
+        //Pregunto si tengo id para saber si estoy editando
+    if(element.id.value){
+        //editando
+        const indice = usersArray.findIndex(usuario =>{
+            if(usuario.id === element.id.value){
+                return true;
+            }
+        })
+
+        usersArray[indice] = usuario;
+        //Swal.fire('ususario editado', 'succes')
+        Swal.fire({
+            title:'usuario editado',
+            text:'los dtos se editaron',
+            icon:'succes',
+            timer:1000
+        })
+        
+
+    }
+    else{
+        //agregando un usuario nuevo
+        usersArray.push(usuario);
+        //Swal.fire('ususario agregado', 'succes')
+        Swal.fire({
+            title:'usuario editado',
+            text:'los dtos se agregaron',
+            icon:'succes',
+            timer:1000
+        })
+    }
+    
+    GenerarInterfaz(usersArray);
+    resetearFormulario();
+    
+
+
+
+
+})
+
+//RESETEO FORMULARIO
+function resetearFormulario(){
+    userForm.reset();
+    userForm.elements.password.disabled=false;
+    userForm.elements.Rpassword.disabled=false;
+    submitBtn.classList.remove('btn-edit');
+    submitBtn.innerText = "Agregar usuario";
+    //hacemos focus en el primer elementos del formulario
+    userForm.elements.fullname.focus();
+}
+
+
+
+function editarUsuario(id){
+    //BUSCAR USUSARIO Y OBTENERLO
+    const userEdit = usersArray.find((user) =>{
+        
+        if(user.id===id){
+            return true;
+        }
+        
+        
+    })
+    //En caso de que no se encuentre
+    if(!userEdit){
+        Swal.fire('error', 'no se encuentra', 'error')
+        return;
+    }
+
+        
+    //RELLENAR FORMULARIO CON DATOS DEL USUARIO A EDITAR
+    
+    //El atributo elements nos permite acceder a TODOS los elementos del formulario
+    const elementsValue = userForm.elements;
+    
+    //Recordar que para alterar el value de los usuarios hay que agregar value al final
+    elementsValue.id.value=userEdit.id;
+    elementsValue.age.value = userEdit.age;
+    elementsValue.location.value = userEdit.location;
+    elementsValue.fullname.value = userEdit.fullname;
+    elementsValue.email.value = userEdit.email;
+    elementsValue.image.value = userEdit.image;
+    //Solo a los elementos checked se accede con checked en lugar de value
+    elementsValue.active.checked = userEdit.active;
+    //El disabled me permite lockear la zona de contraseña
+    elementsValue.password.value = userEdit.password;
+    elementsValue.password.disabled = true;
+    elementsValue.Rpassword.value = userEdit.password;
+    elementsValue.Rpassword.disabled = true;
+    elementsValue.bornDate.value = formatInputDate(userEdit.bornDate)
+    
+    submitBtn.classList.add('btn-edit');
+    submitBtn.innerText='editar usuario'
+
+    
+    
+    //DESHABILITAR LOS INPUTS DE CONTRASEÑA
+}
+
+function formatInputDate(date){
+
+    let fecha = new Date(date);
+
+    let year = fecha.getFullYear();
+    let month = fecha.getMonth() + 1;
+
+    if(month < 10){
+        month = '0' + month;
+    }
+    let day = fecha.getDate();
+    if(day < 10){
+        day = '0' + day;
+    }
+    let fechaFormateada = (`${year}-${month}-${day}`);
+
+    return fechaFormateada;
+}
+
+
+
+
