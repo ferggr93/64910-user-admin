@@ -79,7 +79,7 @@
      si no pasamos ni a ni b solo crea una copia del original 
   */
 
-const usersArray = [
+const usersStart = [
     {
         fullname: 'John Doe',
         age: 30,
@@ -198,6 +198,38 @@ const usersArray = [
     }
 ];
 
+
+
+//Una solucion en caso de que el array venga vacio.
+/*if(JSON.parse( localStorage.getItem("users") )){
+    //Si no es null entra en el if
+    //Si hay algo igualamos e usersarray al storage parseado
+    usersArray = JSON.parse( localStorage.getItem("users") );
+}
+else{
+    usersArray=[];
+}*/
+
+//otra forma 
+/*
+if(JSON.parse( localStorage.getItem("users") )){
+    //Si nadie seteo nada lo hacemos nosotros
+}
+else{
+    localStorage.setItem("users", JSON.stringify( [] ));
+}*/
+
+//OTRA FORMA
+//Si viene vacio setea a un array vacio
+if( localStorage.getItem("users") === null ){
+    //localStorage.setItem("users", JSON.stringify([]))
+    localStorage.setItem("users", JSON.stringify( usersStart ))//no se hace porque en primer lugar no se saca nada del storage
+}
+
+const usersArray = JSON.parse(localStorage.getItem("users"));
+
+
+
 //Obtenemos valor la tabla al que accederemos para "Pintar la interfaz"
 let tableBody = document.getElementById('table-body');
 //Obtenemos valor del search 
@@ -240,7 +272,7 @@ function GenerarInterfaz(array){
 
     //VACIADO PREVIO PARA EVITAR SOBREESCRIBIR LAS COSAS
     tableBody.innerHTML=" ";
-    array.forEach((user, indice) => {//PUEDE RECIBIR 2 PARAMETROS, EL 1ER PARAMETRO IDENTIFICA AL OBJETO, EL 2DO A SU INDICE
+    array.forEach(user => {//PUEDE RECIBIR 2 PARAMETROS, EL 1ER PARAMETRO IDENTIFICA AL OBJETO, EL 2DO A SU INDICE
         tableBody.innerHTML+= `<tr class="table-body">
         <td class="user-image">
             <img src="${user.image}" alt="${user.fullname}"picture>
@@ -295,6 +327,7 @@ function BorrarUsuario(id){
     })
         usersArray.splice(indice, 1);//BORRAMOS SOLAMENTE EL INDICE, AL ESPECIFICAR EL VALOR A BORRAR(INDICE) Y 1 SE ASEGURA DE SOLO BORRAR ESE ELEMENTO
         GenerarInterfaz(usersArray);//VOLVEMOS A GENERAR INTERFAZ CON LOS CAMBIOS
+        actualizarLocalStorage();
     }
     
 }
@@ -343,6 +376,7 @@ userForm.addEventListener('submit', (e)=>{
         return;
     }
     //Manera de asignarle id a los nuevos elementos
+    //FORMA DE GENERAR ID ALEATORIO
     let id;
     if(element.id.value){
         id=element.id.value
@@ -359,7 +393,7 @@ userForm.addEventListener('submit', (e)=>{
         active:element.active.checked,//los active no se toma el value si no el checked que devuelve true o false
         bornDate:new Date(element.bornDate.value).getTime(),//pasar el valor de la fecha a un timestamp 
         location:element.location.value,
-        id:id,//FORMA DE GENERAR ID ALEATORIO
+        id:id,
         image:element.image.value
 
     }
@@ -401,6 +435,9 @@ userForm.addEventListener('submit', (e)=>{
     }
     
     GenerarInterfaz(usersArray);
+
+    //actualizar localstorage
+    actualizarLocalStorage();
     resetearFormulario();
     
 
@@ -487,6 +524,39 @@ function formatInputDate(date){
     return fechaFormateada;
 }
 
+//LocalStorage, nos permite almacenar ciertos datos en nuestro navegador.
+
+localStorage.setItem("usuario", "fernando");//Key/value
+
+//localStorage.getItem("usuario"); //obtener dato(se utiliza el nomre de la key)
+//Si no encuentra algo devolvera null
+
+//Borrar dato guardado
+//localStorage.removeItem("usuario");
+
+//borrar todo el localStorage
+
+//localStorage.clear();
+
+//El local storage todo los valores almacenados los guarda como string, indiferentemente el dato que sea ingresado
+//para sortear esto debemos usar el metodo JSON.stringify()
+
+//los objetos la clave debe ser escrita con comillas
+
+/*
+const user ={
+    nombre : 'Jose',
+    apellido:'Perez'
+}
 
 
+localStorage.setItem('usuario', JSON.stringify(user));//lo pasamos a formato json
 
+const resultado = JSON.parse( localStorage.getItem('usuario') ); //->//Ahora invierto y lo paso a un objeto js
+
+console.log(resultado);*/
+
+function actualizarLocalStorage(){
+        localStorage.setItem("users", JSON.stringify(usersArray));
+
+  }
