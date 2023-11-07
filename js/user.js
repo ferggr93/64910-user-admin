@@ -219,6 +219,7 @@ else{
     localStorage.setItem("users", JSON.stringify( [] ));
 }*/
 
+
 //OTRA FORMA
 //Si viene vacio setea a un array vacio
 if( localStorage.getItem("users") === null ){
@@ -359,7 +360,7 @@ userForm.addEventListener('submit', (e)=>{
         //EL RETURN NOS PERMITE CORTAR LA EJECUCION
         return
     }
-    const emailExist = usersArray.find((user) =>{
+    const userExist = usersArray.find((user) =>{
         if(user.email === element.email.value){
             return true;
         }
@@ -367,7 +368,7 @@ userForm.addEventListener('submit', (e)=>{
     })
     
     
-    if(emailExist && element.id.value != emailExist.id){
+    if(userExist && element.id.value != userExist.id){
         Swal.fire({
             title:'correo existe',
             icon:'succes',
@@ -559,4 +560,5 @@ console.log(resultado);*/
 function actualizarLocalStorage(){
         localStorage.setItem("users", JSON.stringify(usersArray));
 
-  }
+}
+
