@@ -79,154 +79,9 @@
      si no pasamos ni a ni b solo crea una copia del original 
   */
 
-const usersStart = [
-    {
-        fullname: 'John Doe',
-        age: 30,
-        email: 'john.doe@example.com',
-        id: '1',
-        active: true,
-        password: 'password123',
-        bornDate: new Date('1993-01-01').getTime(),
-        location: 'New York, NY',
-        image: 'https://oyster.ignimgs.com/mediawiki/apis.ign.com/mario-kart-for-wii-u/b/b7/Mk8iconbowser.png?width=325'
-    },
-    {
-        fullname: 'Jane Doe',
-        age: 25,
-        email: 'jane.doe@example.com',
-        id: '2',
-        active: false,
-        password: 'password456',
-        bornDate: new Date('1998-05-05').getTime(),
-        location: 'Los Angeles, CA',
-        image: 'https://oyster.ignimgs.com/mediawiki/apis.ign.com/mario-kart-for-wii-u/2/2d/Mk8icondk.png?width=325'
-    },
-    {
-        fullname: 'Alice Johnson',
-        age: 35,
-        email: 'alice.johnson@example.com',
-        id: '3',
-        active: true,
-        password: 'password789',
-        bornDate: new Date('1988-08-08').getTime(),//la fecha tiene que ser transformada a timestamp
-        location: 'Miami, FL',
-        image: "https://m.media-amazon.com/images/I/81wNRtDaTXL.png"
-    },
-    {
-        fullname: 'Michael Smith',
-        age: 40,
-        email: 'michael.smith@example.com',
-        id: '4',
-        active: false,
-        password: 'password101',
-        bornDate: new Date('1983-04-10').getTime(),
-        location: 'Chicago, IL',
-        image: 'https://oyster.ignimgs.com/mediawiki/apis.ign.com/mario-kart-for-wii-u/b/b7/Mk8iconbowser.png?width=325'
-    },
-    {
-        fullname: 'Emily Johnson',
-        age: 28,
-        email: 'emily.johnson@example.com',
-        id: '5',
-        active: true,
-        password: 'password202',
-        bornDate: new Date('1995-02-15').getTime(),
-        location: 'Houston, TX',
-        image: 'https://oyster.ignimgs.com/mediawiki/apis.ign.com/mario-kart-for-wii-u/b/b7/Mk8iconbowser.png?width=325'
-    },
-    {
-        fullname: 'Daniel Lee',
-        age: 34,
-        email: 'daniel.lee@example.com',
-        id: '6',
-        active: false,
-        password: 'password303',
-        bornDate: new Date('1989-07-07').getTime(),
-        location: 'San Francisco, CA',
-        image: "https://m.media-amazon.com/images/I/81wNRtDaTXL.png"
-
-    },
-    {
-        fullname: 'Samantha Davis',
-        age: 22,
-        email: 'samantha.davis@example.com',
-        id: '7',
-        active: true,
-        password: 'password404',
-        bornDate: new Date('2001-11-11').getTime(),
-        location: 'Boston, MA',
-        image: 'https://oyster.ignimgs.com/mediawiki/apis.ign.com/mario-kart-for-wii-u/2/2d/Mk8icondk.png?width=325'
 
 
-    },
-    {
-        fullname: 'James Moore',
-        age: 45,
-        email: 'james.moore@example.com',
-        id: '8',
-        active: false,
-        password: 'password505',
-        bornDate: new Date('1978-12-19').getTime(),
-        location: 'Dallas, TX',
-        image: 'https://oyster.ignimgs.com/mediawiki/apis.ign.com/mario-kart-for-wii-u/2/2d/Mk8icondk.png?width=325'
-
-    },
-    {
-        fullname: 'Isabella Taylor',
-        age: 29,
-        email: 'isabella.taylor@example.com',
-        id: '9',
-        active: true,
-        password: 'password606',
-        bornDate: new Date('1994-06-24').getTime(),
-        location: 'San Diego, CA',
-        image: 'https://oyster.ignimgs.com/mediawiki/apis.ign.com/mario-kart-for-wii-u/2/2d/Mk8icondk.png?width=325'
-
-    },
-    {
-        fullname: 'Ethan Johnson',
-        age: 31,
-        email: 'ethan.johnson@example.com',
-        id: '10',
-        active: false,
-        password: 'password707',
-        bornDate: new Date('1992-03-03').getTime(),
-        location: 'Denver, CO',
-        image: 'https://oyster.ignimgs.com/mediawiki/apis.ign.com/mario-kart-for-wii-u/2/2d/Mk8icondk.png?width=325'
-
-    }
-];
-
-
-
-//Una solucion en caso de que el array venga vacio.
-/*if(JSON.parse( localStorage.getItem("users") )){
-    //Si no es null entra en el if
-    //Si hay algo igualamos e usersarray al storage parseado
-    usersArray = JSON.parse( localStorage.getItem("users") );
-}
-else{
-    usersArray=[];
-}*/
-
-//otra forma 
-/*
-if(JSON.parse( localStorage.getItem("users") )){
-    //Si nadie seteo nada lo hacemos nosotros
-}
-else{
-    localStorage.setItem("users", JSON.stringify( [] ));
-}*/
-
-
-//OTRA FORMA
-//Si viene vacio setea a un array vacio
-if( localStorage.getItem("users") === null ){
-    //localStorage.setItem("users", JSON.stringify([]))
-    localStorage.setItem("users", JSON.stringify( usersStart ))//no se hace porque en primer lugar no se saca nada del storage
-}
-
+//Obtenemos lo que seteamor en el storage previamente
 const usersArray = JSON.parse(localStorage.getItem("users"));
 
 
@@ -238,6 +93,7 @@ let searchInput = document.querySelector('#search');
 //Obtenemos form
 let userForm = document.querySelector("form#user-form");
 
+//BOTON QUE USAREMOS PARA CAMBIAR LOS ESTADOS(EDITANDO/AGREGANDO)
 const submitBtn = userForm.querySelector('button[type=submit].btn-form');
 
 
@@ -367,7 +223,11 @@ userForm.addEventListener('submit', (e)=>{
         
     })
     
+    //Chequeamos si el mail existe y no coincide el userExist(usuario encontrado) con el id del element(el elemento que elegimos editar)
     
+    // mail existe y valor id targeteado    id del usuario actual
+    // && evitamos que editemos el correo del usuario a editar con un correo perteneciente a otro usuario
+    //Basicamente la logica es ¡Puedes editar el correo pero no usar uno que ya se encuentre en la base de datos
     if(userExist && element.id.value != userExist.id){
         Swal.fire({
             title:'correo existe',
@@ -379,12 +239,24 @@ userForm.addEventListener('submit', (e)=>{
     //Manera de asignarle id a los nuevos elementos
     //FORMA DE GENERAR ID ALEATORIO
     let id;
+    //Si el elemento tiene un id(osea ya es uno en el array)
     if(element.id.value){
+        //dejo el id igualado al id que viene con el user
         id=element.id.value
     }
     else{
+        //asigna un nuevo id random
         id=crypto.randomUUID();
     }
+
+    //Usar ternario nos permite resolver if y else que sean de una sola linea
+    //const id = condicion ? condicionTrue : condicionFalse
+
+    //            condicion              true               false
+    //const id = element.id.value ? element.id.value : crypto.randomUUID();
+    
+
+
     
     usuario = {
         fullname:element.fullname.value,//ACCEDEMOS AL NAME DEL INPUT
@@ -400,18 +272,20 @@ userForm.addEventListener('submit', (e)=>{
     }
 
     //2 acciones a realizar, 
-        //a Agregar usuario nuevo
+        //a Agregar usuario nuevo //Usamos push
         //b al estar editando deberia reemplazar la info con la info actualizada
     
         //Pregunto si tengo id para saber si estoy editando
     if(element.id.value){
         //editando
+        //Buscamos el usuario dentro del array
         const indice = usersArray.findIndex(usuario =>{
             if(usuario.id === element.id.value){
                 return true;
             }
         })
-
+        
+        //Accedo al elemento usando el array y el indice obtenido, luego reemplazo con los datos que actualizamos(en este caso)
         usersArray[indice] = usuario;
         //Swal.fire('ususario editado', 'succes')
         Swal.fire({
@@ -450,9 +324,9 @@ userForm.addEventListener('submit', (e)=>{
 //RESETEO FORMULARIO
 function resetearFormulario(){
     userForm.reset();
-    userForm.elements.password.disabled=false;
+    userForm.elements.password.disabled=false;//activo los inputs password si estaban desactivados
     userForm.elements.Rpassword.disabled=false;
-    submitBtn.classList.remove('btn-edit');
+    submitBtn.classList.remove('btn-edit');//remuevo la clase editar
     submitBtn.innerText = "Agregar usuario";
     //hacemos focus en el primer elementos del formulario
     userForm.elements.fullname.focus();
@@ -498,12 +372,14 @@ function editarUsuario(id){
     elementsValue.Rpassword.disabled = true;
     elementsValue.bornDate.value = formatInputDate(userEdit.bornDate)
     
+    //añado la clase btn edit al boton del formulario
     submitBtn.classList.add('btn-edit');
+    //modifico el msj del boton acorde a la accion que realiza
     submitBtn.innerText='editar usuario'
 
     
     
-    //DESHABILITAR LOS INPUTS DE CONTRASEÑA
+    
 }
 
 function formatInputDate(date){
@@ -525,40 +401,22 @@ function formatInputDate(date){
     return fechaFormateada;
 }
 
-//LocalStorage, nos permite almacenar ciertos datos en nuestro navegador.
 
-localStorage.setItem("usuario", "fernando");//Key/value
-
-//localStorage.getItem("usuario"); //obtener dato(se utiliza el nomre de la key)
-//Si no encuentra algo devolvera null
-
-//Borrar dato guardado
-//localStorage.removeItem("usuario");
-
-//borrar todo el localStorage
-
-//localStorage.clear();
-
-//El local storage todo los valores almacenados los guarda como string, indiferentemente el dato que sea ingresado
-//para sortear esto debemos usar el metodo JSON.stringify()
-
-//los objetos la clave debe ser escrita con comillas
-
-/*
-const user ={
-    nombre : 'Jose',
-    apellido:'Perez'
-}
-
-
-localStorage.setItem('usuario', JSON.stringify(user));//lo pasamos a formato json
-
-const resultado = JSON.parse( localStorage.getItem('usuario') ); //->//Ahora invierto y lo paso a un objeto js
-
-console.log(resultado);*/
-
+//Esta funcion nos permite actualizar el storage luego de cada operacion importante en el array delete/update/add
 function actualizarLocalStorage(){
+
+    //Pisamos el valor que teniamos y seteamos uno nuevo
         localStorage.setItem("users", JSON.stringify(usersArray));
 
 }
+
+
+
+//git add .  Agregar
+//git commit -m "Actualizar"
+//git push -u rama donde haremos el push
+//git switch dev(nos movemos a dev)
+//git merge nombre de la rama que queremos mergear          merge es unir una rama con otra/primero debemos movernos a la rama donde queremos traer los cambios
+// git checkout -b "nombre de la rama que crearemos"
+
 

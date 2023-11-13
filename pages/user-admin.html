@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="/css/styles.css" rel="stylesheet">
+    <script src="/js/admin-guard.js"></script>
     <title>Document</title>
 </head>
 <body>
@@ -20,7 +21,9 @@
         <section class="form-container">
             <form action="" id="user-form">
                 
+                <!--Poder guardar id si estoy editando y si no crearlo-->
                 <input type="hidden" id="id">
+
                 <div class="input-group">
                     <label for="fullname">Nombre Completo</label>
                     <input type="text" value="Fernando" name="fullname" id="fullname" required>
@@ -91,7 +94,8 @@
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/initialDate.js"></script>
     <script src="/js/user.js"></script>
-    <script src="/js/storage.js"></script>
+    
 </body>
 </html>
